@@ -1,0 +1,386 @@
+/* Kamship admin panel — deliberately plain, dense and fast to scan. */
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../../assets/fonts/PlusJakartaSans-var.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  --navy: #172D45;
+  --navy-2: #22384F;
+  --slate: #3A4757;
+  --muted: #4D5762;
+  --line: #DFE5EC;
+  --paper: #F5F7FA;
+  --white: #fff;
+  --blue: #1F6B85;
+  --blue-dark: #185466;
+  --amber: #C20F15;
+  --green: #15803D;
+  --green-bg: #ECFDF5;
+  --red: #DC2626;
+  --red-bg: #FEF2F2;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--navy);
+  background: var(--paper);
+}
+
+a { color: var(--blue); }
+a:hover { color: var(--blue-dark); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+code { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; font-size: 0.9em; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 12px; top: 12px; z-index: 100; background: var(--navy); color: #fff; padding: 10px 16px; border-radius: 6px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ------------------------------------------------------------- top bar --- */
+.abar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 18px;
+  background: var(--navy); color: #fff;
+  padding: 0 22px; min-height: 58px;
+}
+.abrand { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-size: 1.02rem; }
+.abrand b { font-weight: 800; }
+.abrand img { border-radius: 6px; }
+.abar-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.alink { color: #CBD5E1; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+.alink:hover { color: #fff; }
+.auser { color: #94A3B8; font-size: 0.88rem; }
+.anav-btn {
+  display: none; background: rgba(255,255,255,0.1); border: 0; color: #fff;
+  font: inherit; font-weight: 700; padding: 9px 14px; border-radius: 8px; cursor: pointer;
+}
+
+/* -------------------------------------------------------------- layout --- */
+.ashell { display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: start; }
+
+.aside {
+  position: sticky; top: 58px; align-self: start;
+  height: calc(100vh - 58px); overflow-y: auto;
+  background: var(--white); border-right: 1px solid var(--line); padding: 16px 12px;
+}
+.aside ul { list-style: none; margin: 0; padding: 0; }
+.aside a {
+  display: block; padding: 9px 12px; border-radius: 8px;
+  color: var(--navy); text-decoration: none; margin-bottom: 2px;
+}
+.aside a:hover { background: var(--paper); }
+.aside a[aria-current="page"] { background: var(--navy); color: #fff; }
+.aside b { display: block; font-size: 0.93rem; font-weight: 700; }
+.aside span { display: block; font-size: 0.76rem; color: var(--muted); line-height: 1.35; margin-top: 1px; }
+.aside a[aria-current="page"] span { color: #94A3B8; }
+
+.amain { padding: 28px 30px 80px; min-width: 0; }
+.ahead { margin-bottom: 24px; }
+.ahead h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px; }
+.aintro { margin: 0; color: var(--muted); max-width: 76ch; }
+
+/* -------------------------------------------------------------- panels --- */
+.apanel {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 24px; margin-bottom: 22px;
+}
+.apanel h2 { font-size: 1.12rem; font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em; }
+.apanel h3 { font-size: 0.97rem; font-weight: 700; margin: 0 0 12px; }
+.aempty { color: var(--muted); margin: 0; font-size: 0.93rem; }
+
+.asubpanel {
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px; margin-bottom: 14px; background: #FCFDFE;
+}
+.asubpanel h3 { margin-bottom: 14px; }
+
+.agrid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+/* ------------------------------------------------------- summary cards --- */
+.acards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+.acard {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 20px; text-decoration: none; color: var(--navy);
+  transition: border-color 150ms, transform 150ms, box-shadow 150ms;
+}
+.acard:hover { border-color: #C3D2E2; transform: translateY(-2px); box-shadow: 0 8px 22px -14px rgba(23,45,69,0.4); }
+.acard.hot { border-left: 4px solid var(--amber); }
+.anum { display: block; font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.alabel { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+
+.aquick { display: flex; flex-wrap: wrap; gap: 10px; }
+.aquick a {
+  padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--paper); text-decoration: none; color: var(--navy); font-size: 0.9rem; font-weight: 600;
+}
+.aquick a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* -------------------------------------------------------------- tables --- */
+.atable { width: 100%; border-collapse: collapse; font-size: 0.91rem; }
+.atable th {
+  text-align: left; padding: 9px 12px; font-size: 0.78rem; font-weight: 700;
+  color: var(--muted); border-bottom: 1px solid var(--line);
+}
+.atable td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.atable tr:last-child td { border-bottom: 0; }
+.atable-rows td { padding: 14px 12px; }
+.atable .aright { text-align: right; }
+.atable .anowrap { white-space: nowrap; }
+.atable tr.isnew { background: #FFFBEB; }
+.asub2 { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; font-weight: 400; }
+
+.atag {
+  display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 999px; background: rgba(194,15,21,0.18); color: #8E0B10; margin-left: 6px;
+}
+.atag-warn { background: var(--red-bg); color: #991B1B; }
+
+.apill {
+  display: inline-block; font-size: 0.76rem; font-weight: 700;
+  padding: 4px 11px; border-radius: 999px; background: var(--paper);
+  border: 1px solid var(--line); color: var(--muted); white-space: nowrap;
+}
+.apill-on, .apill-hired { background: var(--green-bg); border-color: #A7F3D0; color: #065F46; }
+.apill-off, .apill-rejected, .apill-archived { background: var(--paper); color: var(--muted); }
+.apill-new { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
+.apill-shortlisted, .apill-replied { background: #EFF6FF; border-color: #BFDBFE; color: #1E40AF; }
+
+/* --------------------------------------------------------------- forms --- */
+.afield { margin-bottom: 16px; }
+.afield label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; }
+.ahint { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.afield input[type="text"], .afield input[type="email"], .afield input[type="url"],
+.afield input[type="password"], .afield input[type="date"], .afield input[type="number"],
+.afield select, .afield textarea {
+  width: 100%; padding: 9px 12px; min-height: 40px;
+  border: 1px solid var(--line); border-radius: 7px;
+  font: inherit; font-size: 0.93rem; color: var(--navy); background: var(--white);
+}
+.afield textarea { line-height: 1.5; resize: vertical; font-size: 0.9rem; }
+.afield input:focus, .afield select:focus, .afield textarea:focus {
+  outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31,107,133,0.15);
+}
+.acheck { display: flex; align-items: flex-start; gap: 9px; font-weight: 400 !important; font-size: 0.9rem; }
+.acheck input { width: 17px; height: 17px; min-height: 0; margin-top: 2px; flex: none; }
+
+.arow { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0 18px; }
+.arow .afield-wide { grid-column: span 2; }
+
+.aactions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+.asticky {
+  position: sticky; bottom: 0; background: rgba(246,248,251,0.94);
+  backdrop-filter: blur(6px); padding: 14px 0; margin-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.ainline { display: inline-flex; gap: 6px; align-items: center; margin: 0; }
+.ainline select { padding: 6px 10px; min-height: 34px; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 0.85rem; }
+
+.afilter {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 14px 18px; margin-bottom: 20px;
+}
+.afilter select { padding: 8px 12px; min-height: 38px; border: 1px solid var(--line); border-radius: 7px; font: inherit; font-size: 0.9rem; }
+.acount { margin-left: auto; color: var(--muted); font-size: 0.85rem; }
+
+.atabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.atabs a {
+  padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--white); text-decoration: none; color: var(--navy);
+  font-size: 0.89rem; font-weight: 600;
+}
+.atabs a:hover { border-color: #C3D2E2; }
+.atabs a.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.atabs a span { opacity: 0.6; font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------- buttons --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 20px; min-height: 42px; border: 1px solid transparent; border-radius: 8px;
+  font: inherit; font-weight: 700; font-size: 0.92rem; text-decoration: none; cursor: pointer;
+  transition: background 150ms, color 150ms, border-color 150ms;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-dark); color: #fff; }
+.btn-ghost { background: var(--white); border-color: var(--line); color: var(--navy); }
+.btn-ghost:hover { background: var(--paper); border-color: #C3D2E2; color: var(--navy); }
+.btn-danger { background: var(--white); border-color: #FCA5A5; color: var(--red); }
+.btn-danger:hover { background: var(--red); color: #fff; border-color: var(--red); }
+.btn-sm { padding: 6px 13px; min-height: 34px; font-size: 0.84rem; }
+.btn[disabled] { opacity: 0.35; pointer-events: none; }
+
+/* --------------------------------------------------------------- notes --- */
+.anote { padding: 13px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 0.93rem; }
+.anote-ok { background: var(--green-bg); border: 1px solid #A7F3D0; color: #065F46; }
+.anote-bad { background: var(--red-bg); border: 1px solid #FCA5A5; color: #991B1B; }
+.anote ul { margin: 0; padding-left: 1.2em; }
+
+/* ------------------------------------------------------------ messages --- */
+.amsg.isnew { border-left: 4px solid var(--amber); }
+.amsg-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.amsg-head h2 { margin: 0 0 3px; font-size: 1.08rem; }
+.amsg-meta { margin: 0; font-size: 0.83rem; color: var(--muted); }
+.amsg-facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin: 0 0 16px; font-size: 0.9rem; }
+.amsg-facts dt { font-weight: 700; color: var(--muted); font-size: 0.82rem; }
+.amsg-facts dd { margin: 0; }
+.amsg h3 { font-size: 0.82rem; color: var(--muted); margin: 14px 0 5px; }
+.amsg-body { margin: 0 0 14px; font-size: 0.92rem; white-space: pre-wrap; }
+.amsg-foot {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  padding-top: 16px; border-top: 1px solid var(--line);
+}
+
+/* -------------------------------------------------------- login screen --- */
+.alogin { min-height: 100vh; display: grid; place-items: center; padding: 30px 20px; background: var(--navy); }
+.alogin-card {
+  width: min(100%, 430px); background: var(--white);
+  border-radius: 16px; padding: 38px; box-shadow: 0 30px 70px -30px rgba(0,0,0,0.6);
+}
+.alogo { border-radius: 10px; margin-bottom: 18px; }
+.alogin-card h1 { font-size: 1.45rem; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.02em; }
+.asub { color: var(--muted); margin: 0 0 24px; font-size: 0.93rem; }
+.afine { color: var(--muted); font-size: 0.8rem; margin: 20px 0 0; }
+
+/* ---------------------------------------------------------- responsive --- */
+@media (max-width: 1000px) {
+  .acards { grid-template-columns: repeat(2, 1fr); }
+  .agrid2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .anav-btn { display: inline-block; margin-left: auto; }
+  .abar-right { display: none; }
+  .abar-right.open { display: flex; position: absolute; top: 58px; left: 0; right: 0; background: var(--navy-2); padding: 14px 22px; gap: 14px; }
+  .ashell { grid-template-columns: 1fr; }
+  .aside { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); display: none; }
+  .aside.open { display: block; }
+  .amain { padding: 20px 16px 60px; }
+  .apanel { padding: 18px; }
+  .arow { grid-template-columns: 1fr; }
+  .arow .afield-wide { grid-column: auto; }
+  .atable { font-size: 0.85rem; }
+  .atable-rows td { padding: 10px 8px; }
+  .acount { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* The action column has several small buttons; let it scroll rather than
+   pushing the whole page sideways on a phone. */
+@media (max-width: 820px) {
+  .apanel > .atable-rows { display: block; overflow-x: auto; white-space: nowrap; }
+  .apanel > .atable-rows td, .apanel > .atable-rows th { white-space: nowrap; }
+  .apanel > .atable-rows .asub2 { white-space: normal; }
+  .amsg-foot { flex-direction: column; align-items: stretch; }
+  .amsg-foot .btn, .amsg-foot .ainline { width: 100%; justify-content: center; }
+  .amsg-foot .ainline select { flex: 1; }
+}
+
+/* --------------------------------------------------------------- media --- */
+/* The picker inside the article editor: a compact grid of radio choices. */
+.amedia-pick {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px; margin-bottom: 18px;
+}
+.amedia-item { position: relative; cursor: pointer; display: block; }
+.amedia-item input {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; opacity: 0; cursor: pointer;
+}
+.amedia-item img, .amedia-none {
+  display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  border: 2px solid var(--line); border-radius: 8px; background: var(--paper);
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.amedia-none {
+  display: grid; place-items: center; text-align: center;
+  font-size: 0.76rem; color: var(--muted); padding: 4px; line-height: 1.3;
+}
+.amedia-item input:checked ~ img,
+.amedia-item input:checked ~ .amedia-none {
+  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31,107,133,0.18);
+}
+/* Keyboard users get the same ring the mouse users get from :checked. */
+.amedia-item input:focus-visible ~ img,
+.amedia-item input:focus-visible ~ .amedia-none {
+  outline: 3px solid var(--blue); outline-offset: 2px;
+}
+
+/* The library page itself. */
+.amedia-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); gap: 18px;
+}
+.amedia-card {
+  margin: 0; border: 1px solid var(--line); border-radius: 10px;
+  overflow: hidden; background: var(--white); display: flex; flex-direction: column;
+}
+.amedia-shot {
+  display: block; background: var(--paper);
+  border-bottom: 1px solid var(--line); line-height: 0;
+}
+.amedia-shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; }
+.amedia-card figcaption {
+  padding: 12px 13px 13px; display: flex; flex-direction: column; gap: 7px;
+  flex: 1; font-size: 0.84rem;
+}
+.amedia-card figcaption b {
+  font-size: 0.8rem; word-break: break-all; line-height: 1.35;
+}
+.amedia-used { display: flex; flex-direction: column; gap: 3px; }
+.amedia-used span {
+  color: var(--muted); font-size: 0.78rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.amedia-foot {
+  margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+}
+.amedia-name {
+  width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.74rem; padding: 6px 8px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--paper); color: var(--slate);
+}
+.amedia-force { font-size: 0.78rem; }
+.amedia-foot .ainline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
+
+/* ------------------------------------------------------------ branding --- */
+.abrand-cols {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px 18px; margin-bottom: 20px;
+}
+.abrand-col label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; }
+.abrand-col label .ahint { display: block; font-weight: 400; margin-top: 1px; }
+.abrand-input { display: flex; gap: 8px; align-items: stretch; }
+.abrand-input input[type="color"] {
+  width: 46px; padding: 2px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--white); cursor: pointer; flex: none;
+}
+.abrand-input input[type="text"] {
+  flex: 1; min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+}
+.abrand-shot {
+  margin: 0 0 8px; padding: 14px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--white);
+}
+/* The reversed logo is white, so it needs the dark ground it is designed for. */
+.abrand-shot-dark { background: var(--navy); border-color: var(--navy); }
+.abrand-shot img { max-width: 100%; max-height: 90px; display: block; }
+
+/* A neutral badge, for facts rather than warnings. The plain .atag carries the
+   accent red, which reads as "something is wrong" where nothing is. */
+.atag-quiet {
+  background: var(--paper); color: var(--muted);
+  border: 1px solid var(--line); font-weight: 600;
+}
+.amedia-card .atag { margin-left: 0; align-self: flex-start; }

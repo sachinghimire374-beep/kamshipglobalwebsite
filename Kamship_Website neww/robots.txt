@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /inc/
+Disallow: /data/
+Disallow: /uploads/
+
+Sitemap: https://kamshipglobal.com/sitemap.xml

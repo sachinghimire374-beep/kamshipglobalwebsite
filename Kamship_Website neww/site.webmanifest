@@ -1,0 +1,29 @@
+{
+ "name": "Kamship Global",
+ "short_name": "Kamship",
+ "description": "Supervised freight back-office teams from Pokhara, Nepal.",
+ "icons": [
+  {
+   "src": "assets/img/kamship-icon-tile-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "assets/img/kamship-icon-tile-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "assets/img/kamship-icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "theme_color": "#172D45",
+ "background_color": "#FFFFFF",
+ "display": "browser",
+ "start_url": "./"
+}
